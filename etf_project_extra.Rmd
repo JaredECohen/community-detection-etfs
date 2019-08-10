@@ -1,0 +1,210 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+library(readr)
+library(igraph)
+ETF_prices <- read_csv("/Users/jaredmacbook/Documents/R/MATH 190 data/MATH 190 Final Project/ETF_prices.csv")
+
+```
+
+Data for all 5 years
+```{r}
+cor(ETF_prices$SPY, ETF_prices$VOO)
+cor(ETF_prices$SPY, ETF_prices$QQQ)
+cor(ETF_prices$SPY, ETF_prices$VTI)
+cor(ETF_prices$SPY, ETF_prices$VXUS)
+cor(ETF_prices$SPY, ETF_prices$VEA)
+cor(ETF_prices$SPY, ETF_prices$VWO)
+cor(ETF_prices$SPY, ETF_prices$VYM)
+cor(ETF_prices$SPY, ETF_prices$VIG)
+cor(ETF_prices$SPY, ETF_prices$VTV)
+cor(ETF_prices$SPY, ETF_prices$VUG)
+cor(ETF_prices$SPY, ETF_prices$VOE)
+cor(ETF_prices$SPY, ETF_prices$VBK)
+cor(ETF_prices$VOO, ETF_prices$QQQ)
+cor(ETF_prices$VOO, ETF_prices$VTI)
+cor(ETF_prices$VOO, ETF_prices$VXUS)
+cor(ETF_prices$VOO, ETF_prices$VEA)
+cor(ETF_prices$VOO, ETF_prices$VWO)
+cor(ETF_prices$VOO, ETF_prices$VYM)
+cor(ETF_prices$VOO, ETF_prices$VIG)
+cor(ETF_prices$VOO, ETF_prices$VTV)
+cor(ETF_prices$VOO, ETF_prices$VUG)
+cor(ETF_prices$VOO, ETF_prices$VOE)
+cor(ETF_prices$VOO, ETF_prices$VBK)
+cor(ETF_prices$QQQ, ETF_prices$VTI)
+cor(ETF_prices$QQQ, ETF_prices$VXUS)
+cor(ETF_prices$QQQ, ETF_prices$VEA)
+cor(ETF_prices$QQQ, ETF_prices$VWO)
+cor(ETF_prices$QQQ, ETF_prices$VYM)
+cor(ETF_prices$QQQ, ETF_prices$VIG)
+cor(ETF_prices$QQQ, ETF_prices$VTV)
+cor(ETF_prices$QQQ, ETF_prices$VUG)
+cor(ETF_prices$QQQ, ETF_prices$VOE)
+cor(ETF_prices$QQQ, ETF_prices$VBK)
+cor(ETF_prices$VTI, ETF_prices$VXUS)
+cor(ETF_prices$VTI, ETF_prices$VEA)
+cor(ETF_prices$VTI, ETF_prices$VWO)
+cor(ETF_prices$VTI, ETF_prices$VYM)
+cor(ETF_prices$VTI, ETF_prices$VIG)
+cor(ETF_prices$VTI, ETF_prices$VTV)
+cor(ETF_prices$VTI, ETF_prices$VUG)
+cor(ETF_prices$VTI, ETF_prices$VOE)
+cor(ETF_prices$VTI, ETF_prices$VBK)
+cor(ETF_prices$VXUS, ETF_prices$VEA)
+cor(ETF_prices$VXUS, ETF_prices$VWO)
+cor(ETF_prices$VXUS, ETF_prices$VYM)
+cor(ETF_prices$VXUS, ETF_prices$VIG)
+cor(ETF_prices$VXUS, ETF_prices$VTV)
+cor(ETF_prices$VXUS, ETF_prices$VUG)
+cor(ETF_prices$VXUS, ETF_prices$VOE)
+cor(ETF_prices$VXUS, ETF_prices$VBK)
+cor(ETF_prices$VEA, ETF_prices$VWO)
+cor(ETF_prices$VEA, ETF_prices$VYM)
+cor(ETF_prices$VEA, ETF_prices$VIG)
+cor(ETF_prices$VEA, ETF_prices$VTV)
+cor(ETF_prices$VEA, ETF_prices$VUG)
+cor(ETF_prices$VEA, ETF_prices$VOE)
+cor(ETF_prices$VEA, ETF_prices$VBK)
+cor(ETF_prices$VWO, ETF_prices$VYM)
+cor(ETF_prices$VWO, ETF_prices$VIG)
+cor(ETF_prices$VWO, ETF_prices$VTV)
+cor(ETF_prices$VWO, ETF_prices$VUG)
+cor(ETF_prices$VWO, ETF_prices$VOE)
+cor(ETF_prices$VWO, ETF_prices$VBK)
+cor(ETF_prices$VYM, ETF_prices$VIG)
+cor(ETF_prices$VYM, ETF_prices$VTV)
+cor(ETF_prices$VYM, ETF_prices$VUG)
+cor(ETF_prices$VYM, ETF_prices$VOE)
+cor(ETF_prices$VYM, ETF_prices$VBK)
+cor(ETF_prices$VIG, ETF_prices$VTV)
+cor(ETF_prices$VIG, ETF_prices$VUG)
+cor(ETF_prices$VIG, ETF_prices$VOE)
+cor(ETF_prices$VIG, ETF_prices$VBK)
+cor(ETF_prices$VTV, ETF_prices$VUG)
+cor(ETF_prices$VTV, ETF_prices$VOE)
+cor(ETF_prices$VTV, ETF_prices$VBK)
+cor(ETF_prices$VUG, ETF_prices$VOE)
+cor(ETF_prices$VUG, ETF_prices$VBK)
+cor(ETF_prices$VOE, ETF_prices$VBK)
+```
+
+Year 1 Data
+```{r}
+#import price data
+#calculate correlations
+# use results to create ETF_edges_Y1 and ETF_cor_matrix_Y1
+```
+
+```{r}
+ETF_prices_Y1 <- read_csv("/Users/jaredmacbook/Documents/R/MATH 190 data/MATH 190 Final Project/ETF_prices_Y1.csv")
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VOO)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$QQQ)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VTI)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VXUS)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VEA)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VWO)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VYM)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$SPY, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$QQQ)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VTI)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VXUS)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VEA)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VWO)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VYM)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VOO, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VTI)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VXUS)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VEA)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VWO)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VYM)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$QQQ, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VXUS)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VEA)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VWO)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VYM)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VTI, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VEA)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VWO)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VYM)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VXUS, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VEA, ETF_prices_Y1$VWO)
+cor(ETF_prices_Y1$VEA, ETF_prices_Y1$VYM)
+cor(ETF_prices_Y1$VEA, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$VEA, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$VEA, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VEA, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VEA, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VWO, ETF_prices_Y1$VYM)
+cor(ETF_prices_Y1$VWO, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$VWO, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$VWO, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VWO, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VWO, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VYM, ETF_prices_Y1$VIG)
+cor(ETF_prices_Y1$VYM, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$VYM, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VYM, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VYM, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VIG, ETF_prices_Y1$VTV)
+cor(ETF_prices_Y1$VIG, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VIG, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VIG, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VTV, ETF_prices_Y1$VUG)
+cor(ETF_prices_Y1$VTV, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VTV, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VUG, ETF_prices_Y1$VOE)
+cor(ETF_prices_Y1$VUG, ETF_prices_Y1$VBK)
+cor(ETF_prices_Y1$VOE, ETF_prices_Y1$VBK)
+
+```
+
+
+year 2 data
+```{r}
+
+```
+
+year 3 data
+```{r}
+
+```
+
+year 4 data
+```{r}
+
+```
+
+year 5 data
+```{r}
+
+```
+
+
+
+

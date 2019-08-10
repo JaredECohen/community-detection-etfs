@@ -1,0 +1,236 @@
+---
+title: "Community Detection in ETF Correlation Networks, 2014-2019"
+output: html_notebook
+---
+Jared Cohen
+5/7/2019
+
+#Introduction
+Diversification is a cornerstone of Modern Portfolio Theory. Essentially, by diversifying financial assets into different categories, one can minimize risk while optimizing returns a certain risk level. One layer of diversification involves the usage of separate assets classes, such as equities, bond, and precious metals. Beyond assset class diversification, it is important to diversify within an asset class. The global equities market, for example, has myriad types of investments varying based on sector, industry, geograpghy, size, and other factors. By spreading money across a greater variety of investment types, risk can be reduced, and investors can gain exposure to specific domains of the economy without taking on undue risk.
+
+As a result of this desire to access returns of specifc areas of the economy while limiting risk, exchange-traded funds (ETFs) have massively grown in popularity. The fund invests in many different securities, and investors can trade shares of the fund. This allows investors to gain exposure to certain types of investments that would otherwise be too risky to invest in.
+
+A popular trend within the realm of funds is the low-cost fund, or index fund. These ETFs track broad idicies or follow broad strategies and are passively managed. Because there is no active management, fees are lower, which allows investors to keep more of their returns.
+
+An important element about diversification is the correlation between different assets. In a perfectly diversified portfolio, losses in some positions would be offset by gains in others. For this to work effectively, different securities should have low or negative correlations. This paper will analyze a selection of low-cost ETFs with different strategies in order to gain an understanding of the patterns of correlation between them.
+
+#Data
+The following dataset contains historical daily closing prices from 4/1/2014 until 3/31/2019 for 13 different ETFs. This data was retrieved from Yahoo Finance. A separate CSV file was downloaded for each ETF. The column of closing prices from each file was copied into a new CSV file. This CSV file was uploaded as "ETF_prices.csv"
+
+An additional CSV file "ETF_edges.csv" was created. This file contains an edge list, where nodes are the ETFs. Edges represent a correlation in closing price, and all nodes are connected. The CSV file has a column containing the correlation coefficients, and the edge weights are equal to the correlation coeficients multiplied by 100 and then rounded to the nearest integer.
+
+An additional CSV file "ETF_cor_matrix.csv" was created to contain the values for the correlation coefficients that were calculated in a separate R Notebook in the format of a matrix.
+
+The 13 ETFs are the following:
+
+1) SPDR S&P 500 ETF (SPY)
+      This fund tracks the performance of the S&P 500 index
+2) Vanguard S&P 500 ETF (VOO)
+      This fund also tracks the performance of the S&P 500 index
+3) Invesco QQQ Trust (QQQ)
+      This fund tracks the performance of the NASDAQ index
+4) Vanguard Total Stock Market Index Fund ETF (VTI)
+      This fund tracks the performance of the entirety of the US stock market
+5) Vanguard Total International Stock Index Fund ETF (VXUS)
+      This fund tracks the overall performance of stock markets around the world
+6) Vanguard FTSE Developed Markets Index Fund ETF (VEA)
+      This fund tracks the performance of the stock markets of developed economies 
+      outside North America, such as Japan and Western European nations
+7) Vanguard FTSE Emerging Markets Index Fund ETF (VWO)
+      This fund tracks the overall performance of the stock markets in many     
+      developing economies
+8) Vanguard High Dividend Yield Index Fund ETF (VYM)
+    This fund focuses on US large-cap stocks that pay dividends
+9) Vanguard Dividend Appreciation Index Fund ETF (VIG)
+    This fund tracks the performance of the NASDAQ US Dividend Achievers Select 
+    Index, which is comprised of US large-cap dividend-paying stocks that exhibit 
+    characteristics of growth
+10) Vanguard Value Index Fund ETF (VTV)
+    This fund tracks the performance of the MSCI US Prime Market Value Index, 
+    focusing on US stocks that adhere to the value style of investing   
+11) Vanguard Growth Index Fund ETF (VUG)
+    This fund tracks the MSCI US Prime Market Growth Index, focusing on large-cap 
+    US stocks that adgere to the growth style of investing
+12) Vanguard Mid-Cap Value Index Fund ETF (VOE)
+    This fund tracks the performance of mid-cap US stocks, following a value 
+    investing style
+13) Vanguard Small-Cap Growth Index Fund ETF (VBK)
+    This fund tracks the performance of small-cap US stocks, following a growth 
+    investing style
+    
+All of these ETFs are low-cost, passively managed funds that hold hundreds of positions. The purpose of these types of funds is to provide investors with wide-exposure to a specific area of the market while diversifying between differnet equities within that area. Some of these funds simply track major indices like the S&P 500 or the NASDAQ, while others don't track a specific index but rather employ a broad strategy in order to generate returns that are representative of that segment of the market. For example, the strategy of VWO is to invest in foreign, emerging markets that are capable of growly more quickly than more established markets. VTV, however, focuson on large US value companies. A value company may or may not have very high growth rates; the core of the value investing style is to buy stocks at a discount to their intrinsic value. In fact, long-term stock market analyses have revealed the merits of value investing. One study at Yale University demonstrated that buying a stock above a fair valuation materially decreased total returns for up to 30 years into the future (refernece to Yale article).
+
+(ETF data from ETFdb.com)
+
+The last row was removed from ETF_prices because an empty row was automatically added to the CSV file after saving it. ETF_prices was also trimmed to contain only the first 14 columns for the same reason. This was needed to ensure that all values contained in the CSV file were numeric, which was needed for the following calculations.
+```{r}
+library(readr)
+library(igraph)
+ETF_prices <- read_csv("ETF_prices.csv")
+ETF_prices <- ETF_prices[-nrow(ETF_prices),1:14]
+```
+
+#Methods
+Correlations were calculated between the vectors of historical closing price data for each pair of ETFs. The correlations were used to give proportional edge weights in a complete network. The edge weight was set to the nearest integer to 100 times the correlation coefficient.
+
+A heat map was created to visualize the correlation coefficients betweren each pair of ETFs. A histogram was also plotted to visulaize the distribution of correlation coefficents bewtween ETFs. The graph of the ETFs was plotted using a force directed layout, so that nodes with heavier edges between them were closer together. Edge thickness was also set proportionally to edge weight in order to visualize the relative correlary strengths, 
+
+The network was then run through community detection algorithm, focusing on modularity. These algorithms were also run on an unweighted version if the graph to establish a baseline. Another plot was then generated to visualize the differnet communities in the ETF network.
+
+These methods were then redone with price data from each individual year within the five year sample in order to compare the different results.
+
+#Results
+
+```{r}
+summary(ETF_prices[,-1])
+```
+
+It was necessary to calulate to correlation coefficients between each two ETFs in order to create the heat map and histogram and to assign the appropriate edge weight to the graph. I first approached that by calculating the correlation coefficients individually for each pair. I then copied the output value from RStudio into the Weight column in the Excel file with the edge list. I also copied the value into another Excel file that was formatted as a matrix of the correlation coefficients. I then uploaded that CSV file into RStudio and converted the data frame into a matrix. While this approach got the job done, it took a very long time of repititious action and copying and pasting. I later learned a much better approach. Instead of calculating the correlation coefficents individually and creating a matrix from scratch, I was able to use the cor() function with the entire ETF_prices data frame as a parameter, and it returned the correlation matrix. This one line of code replaced about two hours of data organization. 
+
+```{r}
+#Input CSV file containing edge with weigths 
+#Input and print CSV file containing matrix of correlation coefficients between each pair of ETFs
+ETF_edges <- read_csv("ETF_edges.csv")
+ETF_cor_matrix <- read_csv("ETF_cor_matrix.csv")
+ETF_cor_matrix
+```
+
+```{r}
+#Convert the data frame to a matrix and print the correlation matrix
+ETF_correlation_matrix <- as.matrix(ETF_cor_matrix)
+ETF_correlation_matrix
+```
+
+Calculate correlation matrix
+```{r}
+ETF_Cor_matrix2 <- cor(ETF_prices[,-1])
+ETF_Cor_matrix2
+```
+
+Create a heat map to visualize the relative strengths of correlation between ETFs.
+```{r}
+library(ggplot2)
+library(reshape2)
+
+cormat <- ETF_Cor_matrix2
+# Get lower triangle of the correlation matrix
+  get_lower_tri<-function(cormat){
+    cormat[upper.tri(cormat)] <- NA
+    return(cormat)
+  }
+  # Get upper triangle of the correlation matrix
+  get_upper_tri <- function(cormat){
+    cormat[lower.tri(cormat)]<- NA
+    return(cormat)
+  }
+  upper_tri <- get_upper_tri(cormat)
+melted_cormat <- melt(upper_tri, na.rm = TRUE)
+
+ggplot(data = melted_cormat, aes(Var2, Var1, fill = value))+
+ geom_tile(color = "white")+
+ scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+   midpoint = 0, limit = c(-1,1), space = "Lab", 
+   name="Pearson\nCorrelation") +
+  theme_minimal()+ 
+ theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    size = 12, hjust = 1))+
+ coord_fixed()
+
+```
+
+These values and this histogram illustrate the distribution of correlation coefficients between ETFs. The majority of the ETFs have an r value above 0.9, which is a strong correlation. However,  there is a group of some pairs of ETFs with r values between 0.4 and 0.7, which is a moderately strong, positive correlation. This does not include self-edges. Additionally, it would be possible to look remove the less correlatated pairs in order to gain insight into the differences in correlations of the pairs in the 0.9 to 1.0 range; however, any differences on that small a scale would likely be practically insignificant due to random market fluctuations. The primary insight from this is that the majority of ETFs are extremely highly correlated with each other while a few ETFs had only a moderate correlation, meaning there was a greater divergence in price patterns, which may reflect differences in overall performance. 
+```{r}
+summary(ETF_edges$Correlation)
+```
+
+```{r}
+hist(ETF_edges$Correlation, main="Frequency Of Correlation Coefficients between Edges",xlab="Correlation Coefficient")
+```
+
+```{r}
+#Create an unweighted, complete iGraph object and a weighted, complete iGraph object with each ETF as a node
+ETFgraph <- graph.data.frame(ETF_edges, directed = FALSE)
+ETFgraph.weighted <- ETFgraph
+E(ETFgraph.weighted)$weight <- E(ETFgraph.weighted)$Weight
+```
+
+
+This plot illustrates the relationships between these ETFs (nodes). Thicker edges indicate a stronger correlation. The use of a force layout causes the nodes to be placed such that the nodes connected with greater weight (more highly correlated) are closer together. This plot gives the impression that VXUS, VWO, and VEA are loosely connected to all other nodes while the remaining nodes are tightly interconnected.
+```{r}
+set.seed(50)
+E(ETFgraph.weighted)$width <- E(ETFgraph.weighted)$weight/42
+plot(ETFgraph.weighted, layout=layout_with_fr)
+```
+
+These calculations detect communities in the unweighted version of the graph in order to provide a baseline for comparison to the weighted graph. The unweighted graph is basically one large group, with only VBK occupying a separate community. The modularity of close to zero indicates that overall, the unweighted graph lacks much of a sense of communities anywhere,
+```{r}
+ETFcommunity <- fastgreedy.community(ETFgraph)
+length(ETFcommunity)
+sizes(ETFcommunity)
+membership(ETFcommunity)
+modularity(ETFcommunity)
+```
+
+These calculations detect communites in the weighted graph. The graph is split into two groups. One group has VXUS, VEA, and VWO, and the other group has the other 10 nodes. The modularity of 0.026, while still small, is orders of magnitide greater than the baseline modularity, indicating that the relative edge weights based on correlation coefficeints did have a material impact in the community structure of the ETFs.
+```{r}
+ETFcommunity.weighted <- fastgreedy.community(ETFgraph.weighted)
+length(ETFcommunity.weighted)
+sizes(ETFcommunity.weighted)
+membership(ETFcommunity.weighted)
+modularity(ETFcommunity.weighted)
+```
+
+This plot illustrates the separation of the two communites. VEA, VXUS, and VWO occupy their own small communinty aside form the majority of nodes. In the earlier plot, these three ETFs appeared to be more peripheral, and the community detection algorithm confirms that idea.
+```{r}
+set.seed(50)
+plot(ETFcommunity.weighted,ETFgraph.weighted)
+```
+
+Looking at just April 1, 2014 until March 31 2015, the majority of the correlation coefficients between ETFs are above 0.8; however, instead of a there being a group of moderately, positively correlatated ETFs, there is a group of weakly-moderately, negatively correlated ETFs. The presence of these negative correlations is indicative of higher amounts of variation between ETFs in shorter time periods while they tend to converge more over longer time periods.
+```{r}
+ETF_edges_Y1 <- read_csv("/Users/jaredmacbook/Documents/R/MATH 190 data/MATH 190 Final Project/ETF_edges_Y1.csv")
+summary(ETF_edges_Y1$Correlation)
+hist(ETF_edges_Y1$Correlation, main="Frequency Of Correlation Coefficients between Edges",xlab="Correlation Coefficient")
+```
+
+```{r}
+#Create an unweighted, complete iGraph object and a weighted, complete iGraph object with each ETF as a node
+#Add 100 to each edge weight to turn negative edge weights positive while maintaining the same relative weighting
+ETFgraph.Y1 <- graph.data.frame(ETF_edges_Y1, directed = FALSE)
+E(ETFgraph.Y1)$weight <- (E(ETFgraph.Y1)$Weight + 100)
+
+E(ETFgraph.weighted)$width <- E(ETFgraph.weighted)$weight/42
+set.seed(50)
+plot(ETFgraph.weighted, layout=layout_with_fr)
+```
+
+The correlation network from just the first year of the five year sample splits into the exact same two communities as the network that includes all five years. The modularity for this network is also about double that of the five year period network, indicating that these same communities are more tightly connected over this single year.
+This could mean that: 
+1) VXUS, VEA, and VWO were more correlated with each other during this period than overall
+2) The other seven ETFs were more correlated with each other during this time period than overall
+3) VXUS, VEA, and VWO were less correlated with the other seven ETFs during this period than overall
+The third seems most likely as it explains the meaningful number of negative correlations.
+```{r}
+ETFcommunity.Y1 <- fastgreedy.community(ETFgraph.Y1)
+length(ETFcommunity.Y1)
+sizes(ETFcommunity.Y1)
+membership(ETFcommunity.Y1)
+modularity(ETFcommunity.Y1)
+```
+
+```{r}
+set.seed(50)
+plot(ETFcommunity.Y1,ETFgraph.Y1)
+```
+
+#Discussion
+VXUS, VEA, and VWO emerged as a community both over the entire five year span and over the course of the first year within that. These funds are Vanguard Total International Stock Index Fund ETF (VXUS), Vanguard FTSE Developed Markets Index Fund ETF (VEA), and Vanguard FTSE Emerging Markets Index Fund ETF (VWO). It makes sense that these are highly correlated because they all focus on equities outside of North America while the other seven ETFs focus on American equities. One possible conclusion is that there is not much of a difference between the three internation ETFs despite one being focused on developed economies with another being focused on emerging economies. The correlation coefficient for those two ETFs over all five years was 0.92, indicating a very strong, positve correlation. Additionally, the fact that the other seven ETFs formed a community, combined with the fact that the majority of correlation coefficients were greater than 0.9, indicates that the overall performance of these funds was quite simple despite the funds varying in their approaches, whether that be growth, value, high-yield, dividend growth, large-cap, mid-cap, or small-cap. This high correlation implies that investment performance would not differ much between these seven funds, which means that attempting to diversify by investing in several of these funds would not be effective. It's important to note, however, the the five year period being analyzed, is entirely encompassed by a bull market, so it's difficult to say if these conclusions would hold true in a bear market, which is perhaps more important because a bear market is when reducing risk becomes most prudent.
+
+#Future Analysis
+This analysis can be taken further in two sets of ways. First, the parameters of this analysis could be altered. For example, including more ETFs, including different time periods, covering a longer time period,  using opening prices, or using daily average prices could possibly provide more insight. Additionally, analyzing a greater number of funds would allow for community detection at a higher resolution. Also, instead of creating a complete graph with varying edge weights corresponding to correlation strength, it may be interesting to only set the edge if the r value is above 0.5 or even 0.8. This would likely have a material affect of the nature and community structure of the graph. Secondly, the ETFs could be compared in other ways besides price correlations. For example, correlations in yearly total returns over time or similarity of holdings could also be analyzed. It would also be interesting to determine how accurate price correlation is for predicting relative capial appreciation.
+
+
+#Sources
+ETFdb.com
+
+Yahoo Finance
